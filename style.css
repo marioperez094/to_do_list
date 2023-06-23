@@ -1,7 +1,3 @@
-body {
-  background-color: #001F38;
-}
-
 .container-fluid {
   max-width: 1200px;
 }
@@ -68,4 +64,22 @@ form > input {
   border-right: 2px solid #81b4c3;
   width: 35%;
   height: 50px;
+}
+
+@media (max-width: 955px) {
+  form > input {
+    width: 30%;
+  }
+}
+
+@media (max-width: 722px) {
+  form > input {
+    width: 25%;
+  }
+}
+
+@media (max-width: 582px) {
+  form > input {
+    width: 18%;
+  }
 }

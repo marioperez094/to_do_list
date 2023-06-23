@@ -9,35 +9,35 @@
   <link href="./style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-  <div id="sky">
-    <div class="container-fluid text-center text-white">
-      <div class="logo mt-2"><div id="sun"></div></div>
-      <div class="row">
-        <div class="col-12 text-center">
-          <h4 class="mt-2 date"></h4>
-          <h1>Good <span id="greeting">Morning</span></h1>
-          <h3>These are your taks for today:</h3>
-        </div>
-        <div class="col-12 white-background">
-          <table class="table table-responsive">
-            <thead>
-              <tr>
-                <th scope="col"></th>
-                <th scope="col">Name</th>
-                <th scope="col">Tags</th>
-                <th scope="col">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
+  <div class="container-fluid text-center text-white">
+    <div class="logo mt-2"><div id="sun"></div></div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <h4 class="mt-2 w-100 date"></h4>
+        <h1>Good <span id="greeting">Morning</span></h1>
+        <h3>These are your taks for today:</h3>
+      </div>
+      <div class="col-12 white-background">
+        <table class="table table-responsive">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Name</th>
+              <th scope="col">Tags</th>
+              <th scope="col">Made on</th>
+              <th scope="col">Due by</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
           
-          <form class="text-center" id="add-task">
-            <input type="text" placeholder="Task" name="task-name"/>
-            <input type="text" placeholder="Tags, Tags" name="tags-name"/>
-            <span class="date date-black ms-5"></span>
-            <button class="btn btn-outline-primary ms-5 add-task">Add</button>
-          </form>
+        <form class="text-center" id="add-task">
+          <input type="text" placeholder="Task" name="task-name" required/>
+          <input type="text" placeholder="Tags, Tags" name="tags-name" />
+          <input class="date" type="datetime-local" placeholder="due-by" name="tags-name" />
+          <button class="btn btn-outline-primary ms-5 add-task">Add</button>
+        </form>
       </div>
     </div>
   </div>

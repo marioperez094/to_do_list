@@ -1,7 +1,10 @@
+serverID = 216
+
 var currentTime = function() {
   var d = new Date();
-  var date = [d.getMonth() + 1, d.getDate(), d.getFullYear()];var time = [d.getHours(), d.getMinutes()];
-  var dateFormat = date.join('/') + ' ' + time.map(function
+  var date = [d.getFullYear(), d.getMonth() + 1, d.getDate()];
+  var time = [d.getHours(), d.getMinutes()];
+  var dateFormat = date.join('-') + 'T' + time.map(function
     (num) {
       if (num < 10) {
         return '0' + num;
@@ -19,7 +22,7 @@ window.addEventListener('load', function() {
 
 //Changes background color and greeting
 var setTimeofDay = function (time) {
-  var htmlSky = document.querySelector('#sky');
+  var htmlSky = document.querySelector('body');
   var htmlGreeting = document.querySelector('#greeting');
   var htmlSun = document.querySelector('#sun');
   var backgroundColor = {
@@ -56,12 +59,10 @@ var setTimeofDay = function (time) {
 }
 
 var updateTime = function (date) {
-  var htmlDate = document.querySelectorAll('.date');
+  var htmlDate = document.querySelector('.date');
   var hour = parseFloat(date.slice(10, 12))
 
-  htmlDate.forEach(function(html) {
-    html.innerHTML = date
-  })
+  htmlDate.innerHTML = date;
 
   switch(hour) {
     case 5:
@@ -81,10 +82,9 @@ document.body.addEventListener('click', function(e) {
     var submit = document.querySelector('#add-task');
     var taskName = submit.childNodes[1].value;
     var taskTags = submit.childNodes[3].value;
-    console.log(taskName)
-    console.log(taskTags)
+    var taskDueDate = submit.childNodes[5].value;
 
-
+    if(!taskName) { return alert('No Task Added')};
 
     document.querySelector('tbody').appendChild(newRow);
     var newInput = document.createElement('input');
@@ -97,6 +97,7 @@ document.body.addEventListener('click', function(e) {
     addTaskElement('td', taskName);
     addTaskElement('td', taskTags);
     addTaskElement('td', currentTime());
+    addTaskElement('td', taskDueDate);
 
     submit.childNodes[1].value = '';
     submit.childNodes[3].value = '';

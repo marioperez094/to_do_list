@@ -4,6 +4,7 @@
 
 .Morning, .Afternoon, .Evening, .Night {
   min-height: 100vmax;
+  min-width: 100vmax;
 }
 
 .Morning {
@@ -64,6 +65,10 @@ form > input {
   border-right: 2px solid #81b4c3;
   width: 35%;
   height: 50px;
+}
+
+.date {
+  width: 125px;
 }
 
 @media (max-width: 955px) {

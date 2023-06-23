@@ -1,16 +1,20 @@
-var d = new Date();
-var date = [d.getMonth() + 1, d.getDate(), d.getFullYear()];
-var time = [d.getHours(), d.getMinutes()];
-var dateFormat = date.join('/') + ' ' + time.map(function(num) {
-  if (num < 10) {
-    return '0' + num;
-  }
-  else { return num };
-}).join(':');
+var currentTime = function() {
+  var d = new Date();
+  var date = [d.getMonth() + 1, d.getDate(), d.getFullYear()];var time = [d.getHours(), d.getMinutes()];
+  var dateFormat = date.join('/') + ' ' + time.map(function
+    (num) {
+      if (num < 10) {
+        return '0' + num;
+      }
+      else { return num };
+    }).join(':');
+  
+  updateTime(dateFormat);
+  return dateFormat;
+}
 
 window.addEventListener('load', function() {
-  updateTime();
-  setTimeofDay(d.getHours());
+  setTimeofDay(currentTime().slice(10, 12))
 })
 
 //Changes background color and greeting
@@ -51,12 +55,12 @@ var setTimeofDay = function (time) {
   }
 }
 
-var updateTime = function () {
-  var hour = d.getHours();
+var updateTime = function (date) {
   var htmlDate = document.querySelectorAll('.date');
+  var hour = parseFloat(date.slice(10, 12))
 
   htmlDate.forEach(function(html) {
-    html.innerHTML = dateFormat
+    html.innerHTML = date
   })
 
   switch(hour) {
@@ -68,7 +72,7 @@ var updateTime = function () {
   }
 }
 
-//setInterval(updateTime, 5000)
+setInterval(currentTime, 5000)
 
 document.body.addEventListener('click', function(e) {
   if(e.target.matches('.add-task')) {
@@ -92,7 +96,10 @@ document.body.addEventListener('click', function(e) {
 
     addTaskElement('td', taskName);
     addTaskElement('td', taskTags);
-    addTaskElement('td', dateFormat);
+    addTaskElement('td', currentTime());
+
+    submit.childNodes[1].value = '';
+    submit.childNodes[3].value = '';
 
   }
 })

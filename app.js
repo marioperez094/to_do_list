@@ -1,5 +1,6 @@
-serverID = 216
+var serverID = 216
 
+//Background and Header
 var currentTime = function() {
   var d = new Date();
   var date = [d.getFullYear(), d.getMonth() + 1, d.getDate()];
@@ -16,53 +17,52 @@ var currentTime = function() {
   return dateFormat;
 }
 
-window.addEventListener('load', function() {
+$(document).ready (function () {
   setTimeofDay(currentTime().slice(10, 12))
+  listOutTasks()
 })
 
-//Changes background color and greeting
+ //Changes background color and greeting
 var setTimeofDay = function (time) {
-  var htmlSky = document.querySelector('body');
-  var htmlGreeting = document.querySelector('#greeting');
-  var htmlSun = document.querySelector('#sun');
   var backgroundColor = {
     5: 'Morning',
     12: 'Afternoon',
     17: 'Evening',
     19: 'Night',
   }
+
   if (time > 4 && time < 12) {
-    htmlSky.className = backgroundColor[5];
-    htmlGreeting.innerHTML = backgroundColor[5];
-    htmlSun.style.bottom = '-75px';
-    htmlSun.style.left = '30%';
+    $('body').addClass(backgroundColor[5])
+    $('#greeting').text(backgroundColor[5])
+    $('#sun').css('bottom', '-75px')
+    $('#sun').css('left', '30%')
   }
   else if (time > 11 && time < 17) {
-    htmlSky.className = backgroundColor[12];
-    htmlGreeting.innerHTML = backgroundColor[12];
-    htmlSun.style.bottom = '-30px';
-    htmlSun.style.left = '48%';
+    $('body').addClass(backgroundColor[12])
+    $('#greeting').text(backgroundColor[12])
+    $('#sun').css('bottom', '-30px')
+    $('#sun').css('left', '48%')
   }
   else if (time > 16 && time < 19) {
-    htmlSky.className = backgroundColor[17];
-    htmlGreeting.innerHTML = backgroundColor[17];
-    htmlSun.style.bottom = '-75px';
-    htmlSun.style.left = '70%';
+    $('body').addClass(backgroundColor[17])
+    $('#greeting').text(backgroundColor[17])
+    $('#sun').css('bottom', '-75px')
+    $('#sun').css('left', '70%')
   }
   else {
-    htmlSky.className = backgroundColor[19];
-    htmlGreeting.innerHTML = backgroundColor[19];
-    htmlSun.style.bottom = '-75px';
-    htmlSun.style.left = '48%';
-    htmlSun.style.backgroundColor = 'white';
+
+    $('body').addClass(backgroundColor[19])
+    $('#greeting').text(backgroundColor[19])
+    $('#sun').css('bottom', '-75px')
+    $('#sun').css('left', '48%')
+    $('#sun').css('background-color', 'white')
   }
 }
 
 var updateTime = function (date) {
-  var htmlDate = document.querySelector('.date');
   var hour = parseFloat(date.slice(10, 12))
 
-  htmlDate.innerHTML = date;
+  $('.date').text(date)
 
   switch(hour) {
     case 5:
@@ -75,44 +75,132 @@ var updateTime = function (date) {
 
 setInterval(currentTime, 5000)
 
-document.body.addEventListener('click', function(e) {
-  if(e.target.matches('.add-task')) {
-    e.preventDefault();
-    var newRow = document.createElement('tr');
-    var submit = document.querySelector('#add-task');
-    var taskName = submit.childNodes[1].value;
-    var taskTags = submit.childNodes[3].value;
-    var taskDueDate = submit.childNodes[5].value;
+//Add Tasks
+var addTask = function (arr, id, due, status) {
 
-    if(!taskName) { return alert('No Task Added')};
+  $('<tr></tr>').appendTo('tbody')
+  $('<td></td>', {
+    html: '<input class="checkbox" type="checkbox" value="' + id + '"' + status +'/>',
+  }).appendTo('tbody tr:last-child')
 
-    document.querySelector('tbody').appendChild(newRow);
-    var newInput = document.createElement('input');
-    newInput.type = "checkbox";
-    addTaskElement('td');
-    var td = document.querySelectorAll('td');
-    td[td.length - 1].appendChild(newInput);
-    
+  $('<td></td>', {
+    html: arr[0],
+  }).appendTo('tbody tr:last-child')
 
-    addTaskElement('td', taskName);
-    addTaskElement('td', taskTags);
-    addTaskElement('td', currentTime());
-    addTaskElement('td', taskDueDate);
+  $('<td></td>', {
+    html: arr[1],
+  }).appendTo('tbody tr:last-child')
 
-    submit.childNodes[1].value = '';
-    submit.childNodes[3].value = '';
+  $('<td></td>', {
+    html: due,
+  }).appendTo('tbody tr:last-child')
 
-  }
+  $('<td></td>', {
+    'class': 'ms-5',
+    html: arr[2] + '<button class="trash-button ms-5" value="' + id + '"><i class="fa-solid fa-trash"></i></button>',
+  }).appendTo('tbody tr:last-child')
+}
+
+ //API implementation
+var listOutTasks = function () {
+  $.ajax({
+    type: 'GET',
+    url: 'https://fewd-todolist-api.onrender.com/tasks?api_key=' + serverID,
+    dataType: 'json',
+    success: function (response, textStatus) {
+      console.log(response.tasks)
+      
+      response.tasks.forEach(function (task) {
+        var arr = task.content.split(' / ')
+        if (task.completed) { addTask(arr, task.id, task.due, 'checked') }
+        else { addTask(arr, task.id, task.due) }
+
+      });
+    },
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    }
+  });
+}
+
+$('#add-task').on('submit', function (e) {
+  e.preventDefault();
+  var name = $(this).children('[name=task-name]').val();
+  var tags = $(this).children('[name=tags-name]').val();
+  var dueDate = $(this).children('[name=due-date]').val();
+
+  $.ajax({
+    type: 'POST',
+    url: 'https://fewd-todolist-api.onrender.com/tasks?api_key=' + serverID,
+    contentType: 'application/json',
+    dataType: 'json',
+    data: JSON.stringify({
+      task: {
+        content: name + ' / ' + tags + ' / ' + currentTime(),
+        due: dueDate,
+      }
+    }),
+    success: function (response, textStatus) {
+      addTask(response.task.content.split(' / '), response.task.id, response.task.due);
+    },
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    }
+
+  });
+
+  $(this).children('[name=task-name]').val('');
+  $(this).children('[name=tags-name]').val('');
+  $(this).children('[name=due-date]').val('');
 })
 
-var addTaskElement = function (ele, text) {
-  var row = document.querySelectorAll('tr');
-  var newElement = document.createElement(ele)
+$(document).on('click', '.trash-button', function (e) {
+  var id = $(this).val()
+  var row = $(this).closest('tr')
+  $.ajax({
+    type: 'DELETE',
+    url: 'https://fewd-todolist-api.onrender.com/tasks/' + id + '?api_key=' + serverID,
+    success: function (response, textStatus) {
+      if (response.success) {
+        row.remove()
+      }
+    },
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    }
+  });
 
-  if(text) {
-    var newTextNode = document.createTextNode(text);
-    newElement.appendChild(newTextNode);
-  };
+})
 
-  row[row.length - 1].appendChild(newElement);
+$(document).on('change', '.checkbox', function (e) {
+  var id = $(this).val()
+  var row = $(this).closest('tr')
+  var isComplete;
+  $.ajax({
+    type: 'GET',
+    url: 'https://fewd-todolist-api.onrender.com/tasks/' + id + '?api_key=' + serverID,
+    dataType: 'json',
+    success: function (response, textStatus) {
+      console.log(response.task.completed);
+      if (response.task.completed) { isComplete = 'mark_active' }
+      else { isComplete = 'mark_complete' }
+      updateCheckmark(id, row, isComplete)
+    },
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    }
+  });
+});
+
+var updateCheckmark = function (id, row, isComplete) {
+  $.ajax({
+    type: 'PUT',
+    url: 'https://fewd-todolist-api.onrender.com/tasks/' + id + '/' + isComplete + '?api_key=' + serverID,
+    success: function (response, textStatus) {
+      console.log(response)
+    },
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    }
+  });
 }

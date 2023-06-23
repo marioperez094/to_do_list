@@ -71,6 +71,13 @@ form > input {
   width: 125px;
 }
 
+.trash-button {
+  background-color: transparent;
+  font-size: 25px;
+  transform: rotate(45deg);
+  border: none;
+}
+
 @media (max-width: 955px) {
   form > input {
     width: 30%;

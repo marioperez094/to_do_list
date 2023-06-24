@@ -28,7 +28,10 @@
   max-width: 1200px;
 }
 
-.Morning, .Afternoon, .Evening, .Night {
+.Morning,
+.Afternoon,
+.Evening,
+.Night {
   min-height: 100vmax;
   min-width: 100vmax;
 }
@@ -70,7 +73,7 @@
   border-top-right-radius: 0;
 }
 
-input[type="checkbox"]  {
+input[type="checkbox"] {
   width: 25px;
   height: 25px;
 }
@@ -87,7 +90,7 @@ form {
   border-top: 2px solid #81b4c3;
 }
 
-form > input {
+form>input {
   border: none;
   border-right: 2px solid #81b4c3;
   width: 35%;
@@ -106,19 +109,19 @@ form > input {
 }
 
 @media (max-width: 955px) {
-  form > input {
+  form>input {
     width: 30%;
   }
 }
 
 @media (max-width: 722px) {
-  form > input {
+  form>input {
     width: 25%;
   }
 }
 
 @media (max-width: 582px) {
-  form > input {
+  form>input {
     width: 18%;
   }
 }

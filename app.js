@@ -6,32 +6,32 @@ var taskArr = [];
 
 
 //Gets Time
-var currentTime = function() {
+var currentTime = function () {
   var d = new Date();
   var date = [d.getFullYear(), d.getMonth() + 1, d.getDate()];
-  var time = [d.getHours(), d.getMinutes(), d.getSeconds()];
+  var time = [d.getHours(), d.getMinutes()];
   var dateFormat = date.join('-') + 'T' + time.map(function
     (num) {
-      if (num < 10) {
-        return '0' + num;
-      }
-      else { return num };
-    }).join(':');
-    
+    if (num < 10) {
+      return '0' + num;
+    }
+    else { return num };
+  }).join(':');
+
   $('.date').text(dateFormat)
-  
-  switch(d.getHours()) {
+
+  switch (d.getHours()) {
     case 5:
     case 12:
     case 17:
     case 19:
       setTimeofDay(d.getHours())
-    }
+  }
   return dateFormat;
 }
 
- //Changes background color and greeting
- var setTimeofDay = function (time) {
+//Changes background color and greeting
+var setTimeofDay = function (time) {
   var backgroundColor = {
     5: 'Morning',
     12: 'Afternoon',
@@ -72,7 +72,7 @@ setInterval(currentTime, 5000);
 var addTask = function (arr, id, due, status) {
   $('<tr></tr>').appendTo('tbody')
   $('<td></td>', {
-    html: '<input class="checkbox" type="checkbox" value="' + id + '"' + status +'/>',
+    html: '<input class="checkbox" type="checkbox" value="' + id + '"' + status + '/>',
   }).appendTo('tbody tr:last-child');
 
   $('<td></td>', {
@@ -100,7 +100,7 @@ var addTask = function (arr, id, due, status) {
 
 var setTasks = function () {
   $.ajax({
-    type: 'GET', 
+    type: 'GET',
     url: 'https://fewd-todolist-api.onrender.com/tasks?api_key=' + serverID,
     dataType: 'json',
     success: function (response, textStatus) {
@@ -123,14 +123,15 @@ var setTags = function () {
   $('select').remove()
   $('<select></select>', {
     'class': 'tag-select rounded-pill text-center',
-    'name': 'tags' }).appendTo('.selector')
-  var tagList = taskArr.map(function(tag) {
+    'name': 'tags'
+  }).appendTo('.selector')
+  var tagList = taskArr.map(function (tag) {
     return tag.content.split(' / ')[1].split(',')
   });
-  
+
   tagList = tagList.join(',').split(',')
 
-  tagList.forEach(function(item) {
+  tagList.forEach(function (item) {
     if (taskTags.indexOf(item) > -1) { return }
     else { taskTags.push(item) }
   })
@@ -143,7 +144,7 @@ var setTags = function () {
   })
   $('<option></option>', {
     html: 'All',
-    'value': 'All', 
+    'value': 'All',
     'selected': true,
   }).appendTo('.tag-select')
 }
@@ -196,7 +197,7 @@ $('#add-task').on('submit', function (e) {
 
 
 //Waits for Document to Load
-$(document).ready (function () {
+$(document).ready(function () {
   setTimeofDay(currentTime().slice(10, 12));
   setTasks()
 })
@@ -204,15 +205,15 @@ $(document).ready (function () {
 $(document).on('click', '.trash-button', function (e) {
   var id = $(this).val()
   var row = $(this).closest('tr')
-  
-  
+
+
 
   $.ajax({
     type: 'DELETE',
     url: 'https://fewd-todolist-api.onrender.com/tasks/' + id + '?api_key=' + serverID,
     success: function (response, textStatus) {
       if (response.success) {
-        taskArr.forEach(function(item, i) {
+        taskArr.forEach(function (item, i) {
           if (parseFloat(id) === parseFloat(item.id)) {
             taskArr = taskArr.slice(0, i).concat(taskArr.slice(i + 1))
           }
@@ -230,7 +231,7 @@ $(document).on('click', '.trash-button', function (e) {
 $(document).on('change', '.checkbox', function (e) {
   var id = $(this).val()
   var isComplete;
-  taskArr.forEach(function(item, i) {
+  taskArr.forEach(function (item, i) {
     if (parseFloat(id) === parseFloat(item.id)) {
       item.completed = !item.completed;
     }
@@ -256,7 +257,7 @@ $(document).on('click', '.active-list', function () {
   $('.active-list').addClass('active-btn');
   $('.completed-list').removeClass('active-btn');
   $('.all-list').removeClass('active-btn');
-  var activeItems = taskArr.filter(function(item) {
+  var activeItems = taskArr.filter(function (item) {
     return item.completed === false;
   })
 
@@ -274,7 +275,7 @@ $(document).on('click', '.completed-list', function () {
   $('.active-list').removeClass('active-btn');
   $('.completed-list').addClass('active-btn');
   $('.all-list').removeClass('active-btn');
-  var completedItems = taskArr.filter(function(item) {
+  var completedItems = taskArr.filter(function (item) {
     return item.completed === true;
   })
   displayFilter(completedItems);
@@ -294,7 +295,7 @@ $(document).on('change', '.tag-select', function () {
   var filterTag = $(this).val()
   if (filterTag === 'All') { filteredItems = taskArr }
   else {
-    var filteredItems = taskArr.filter(function(item) {
+    var filteredItems = taskArr.filter(function (item) {
       return item.content.split(' / ')[1].split(',').indexOf(filterTag) > -1;
     });
   }
@@ -302,10 +303,10 @@ $(document).on('change', '.tag-select', function () {
 })
 
 var displayFilter = function (arr) {
-  if(arr.length < 1) { return $('tbody').remove(); }
+  if (arr.length < 1) { return $('tbody').remove(); }
   $('tbody').remove();
   $('table').append('<tbody></tbody>');
-  arr.forEach(function(task) {
+  arr.forEach(function (task) {
     var array = task.content.split(' / ')
     if (task.completed) { addTask(array, task.id, task.due, 'checked') }
     else { addTask(array, task.id, task.due) }

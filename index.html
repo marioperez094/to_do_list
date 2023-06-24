@@ -19,6 +19,14 @@
         <h1>Good <span id="greeting">Morning</span></h1>
         <h3>These are your taks for today:</h3>
       </div>
+      <div class="col-12 selector text-end white-tab ms-auto">
+        <button class="btn select-btn rounded-pill all-list">All</button>
+        <button class="btn select-btn rounded-pill active-list">Active</button>
+        <button class="btn select-btn rounded-pill completed-list">Completed</button>
+        <select class="tag-select rounded-pill text-center" name="tags" placeholder="Tags">
+          <option value="all" selected>All</option>
+        </select>
+      </div>
       <div class="col-12 white-background">
         <table class="table table-responsive">
           <thead>
@@ -28,6 +36,7 @@
               <th scope="col">Tags</th>
               <th scope="col">Due by</th>
               <th scope="col">Made on</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
